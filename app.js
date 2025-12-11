@@ -59,6 +59,12 @@ if (typeof document !== 'undefined') {
 
   document.addEventListener("keypress", () => {
     if (!started) {
+      startNewGame();
+    }
+  });
+
+  function startNewGame() {
+    if (!started) {
       started = true;
       gameSeq = [];
       userSeq = [];
@@ -67,7 +73,7 @@ if (typeof document !== 'undefined') {
       messageEl.innerText = "Watch the sequence!";
       leveUp();
     }
-  });
+  }
 
   function btnFlash(btn) {
     btn.classList.add("flash");
@@ -153,6 +159,13 @@ if (typeof document !== 'undefined') {
   }
 
   function btnPress(e) {
+    // Allow starting game by clicking any button before game starts
+    if (!started) {
+      startNewGame();
+      return;
+    }
+    
+    // During the game, only accept clicks if buttons are enabled
     if (started && !this.classList.contains("disabled")) {
       const btn = this;
       userFlash(btn);
