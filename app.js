@@ -1,11 +1,3 @@
-document.addEventListener("keypress",()=>{
-   if(started == false)
-   {
-    // console.log("game started");
-    started =true;
-    leveUp();
-   }
-});
 // Enhanced Simon game logic (browser only). If `document` is not available (Node), skip DOM setup.
 let gameSeq = [];
 let userSeq = [];
@@ -19,11 +11,50 @@ if (typeof document !== 'undefined') {
   const messageEl = document.querySelector("#message");
   const levelEl = document.querySelector("#level");
   const highScoreEl = document.querySelector("#highScore");
+  const timerEl = document.querySelector("#timer");
 
   // Initialize displays
   highScoreEl.innerText = highScore;
   function updateLevelDisplay() {
     levelEl.innerText = level === 0 ? "--" : level;
+  }
+
+  // Turn timer state
+  let turnTimerInterval = null;
+  let turnTimeLeft = 0;
+
+  function computeAllowedTime(level) {
+    // Base 30s; increase by 5s every 3 levels, cap at 60s
+    return Math.min(60, 30 + Math.floor(level / 3) * 5);
+  }
+
+  function updateTimerDisplay() {
+    if (timerEl) timerEl.innerText = turnTimeLeft > 0 ? `${turnTimeLeft}s` : "--";
+  }
+
+  function clearTurnTimer() {
+    if (turnTimerInterval) {
+      clearInterval(turnTimerInterval);
+      turnTimerInterval = null;
+    }
+    turnTimeLeft = 0;
+    updateTimerDisplay();
+  }
+
+  function startTurnTimer() {
+    clearTurnTimer();
+    turnTimeLeft = computeAllowedTime(level || 1);
+    updateTimerDisplay();
+    turnTimerInterval = setInterval(() => {
+      turnTimeLeft -= 1;
+      updateTimerDisplay();
+      if (turnTimeLeft <= 0) {
+        clearTurnTimer();
+        // Timeout: end the game
+        messageEl.innerHTML = `Time's up!`;
+        setTimeout(() => endGame(), 300);
+      }
+    }, 1000);
   }
 
   document.addEventListener("keypress", () => {
@@ -49,6 +80,8 @@ if (typeof document !== 'undefined') {
   }
 
   function leveUp() {
+    // clear any user-turn timer when computer starts sequence
+    clearTurnTimer();
     userSeq = [];
     level++;
     updateLevelDisplay();
@@ -78,6 +111,8 @@ if (typeof document !== 'undefined') {
     setTimeout(() => {
       document.querySelectorAll(".btn").forEach(b => b.classList.remove("disabled"));
       messageEl.innerText = "Your turn!";
+      // Start countdown for player's response
+      startTurnTimer();
     }, delay);
   }
 
@@ -93,6 +128,9 @@ if (typeof document !== 'undefined') {
 
   function endGame() {
     started = false;
+
+    // clear timer if running
+    clearTurnTimer();
 
     if (level > parseInt(highScore)) {
       highScore = level;
