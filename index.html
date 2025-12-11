@@ -3,25 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simon game</title>
+    <title>Simon Game - Test Your Memory</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>
-        Simon game
-    </h1>
-    <h2>Press any key to start</h2>
-    <div class="btn-container">
-        <div class="line1">
-            <div class="btn red" id ="red" type = "button">1</div>
-            <div class="btn yellow" id ="yellow" type = "button">2</div>
-        </div>
-        <div class="line2">
-            <div class="btn purple" id ="purple" type = "button">3</div>
-            <div class="btn green" id ="green" type = "button">4</div>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎮 Simon Game</h1>
+            <p class="subtitle">Test your memory and reflexes</p>
         </div>
         
+        <div class="game-info">
+            <div class="score-card">
+                <span class="label">Level</span>
+                <span class="value" id="level">--</span>
+            </div>
+            <div class="score-card">
+                <span class="label">High Score</span>
+                <span class="value" id="highScore">0</span>
+            </div>
+        </div>
+        
+        <div class="status-message">
+            <h2 id="message">Press any key to start</h2>
+        </div>
+        
+        <div class="game-board">
+            <div class="btn-grid">
+                <div class="btn red" id="red"></div>
+                <div class="btn yellow" id="yellow"></div>
+                <div class="btn purple" id="purple"></div>
+                <div class="btn green" id="green"></div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p>Watch the sequence and repeat it back!</p>
+        </div>
     </div>
-   <script src="app.js"></script>
+    
+    <script src="app.js"></script>
 </body>
 </html>
